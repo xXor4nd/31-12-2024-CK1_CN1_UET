@@ -1,0 +1,854 @@
+//18:03 31/12/2024 xor4nd
+
+
+//Bài 1: Đọc từ bàn phím cho đến khi đọc được số nguyên dương(>0), in số này ra. Kiểm tra xem số này có phải chia hết cho 5 hoặc lớn hơn 50 hay không.
+//Nếu đúng in ra YES, nếu sai in ra NO
+
+#include "iostream"
+using namespace std;
+
+bool check(int n)
+{
+    if(n>50 || n%5==0)return true;
+    return false;
+}
+
+int main()
+{
+    int n;
+    do
+    {
+        cin >>n;
+    }while(n<=0);
+    if(check(n))cout << n << ' ' << "YES" << endl;
+    else cout << n << ' ' << "NO" << endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Bài 2: Cho 2 số nguyên N(>0),K(>0), in ra N số chia hết cho 10 đầu tiên lớn hơn hoặc bằng K , các số cách nhau bởi dấu cách. Nếu đầu vào k hợp lệ
+//in ra INVALID.
+
+#include "iostream"
+using namespace std;
+
+void get_ans(int n,int k)
+{
+    int cnt=0;
+    int r = k%10;
+    int tmp = r==0?k:k+10-r;
+    while(n--)
+    {
+        cout << tmp << ' ';
+        tmp += 10;
+    }
+    return;
+}
+
+int main()
+{
+    int n,k;cin>>n>>k;
+    if(n<=0 || k<=0)
+    {
+        cout << "INVALID" << endl;
+        return 1;
+    }
+    else get_ans(n,k);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Bài 3: Nhập vào 1 dãy số nguyên gồm n (n<=100) phần tử. Tìm và tính tổng các phần tử là lũy thừa của 3 và có trong dãy. In ra tất cả các số lũy thừa của 3
+// này và tổng của chúng. Nếu dãy không có số nào là lũy thừa của 3 thì không in gì.
+#include "iostream"
+using namespace std;
+
+bool check3(int n)
+{
+    while(n>1)
+    {
+        if(n%3)return false;
+        n/=3;
+    }
+    return true;
+}
+
+int main()
+{
+    int n;
+    cin >>n;
+    int a[n];
+    for(int i=0;i<n;i++)cin >> a[i];
+    int sum=0;
+    for(int i=0;i<n;i++)
+    {
+        if(check3(a[i]))
+        {
+            sum += a[i];
+            cout << a[i] << ' ';
+        }
+    }
+    cout << endl << sum << endl;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Bài 4: Cho 1 chuỗi kí tự gồm các kí tự chữ số từ '0' đến '9'. Đếm số lần xuất hiện của các kí tự này. Sau đó in ra kí tự và số lượng kí tự đó,
+// kí tự nào không xuất hiện trong chuỗi thì k in ra. In ra theo thứ tự tăng dần của kí tự trong bảng mã ASCII.
+
+//Cách 1 : Ngây thơ O(n^2)
+#include "iostream"
+using namespace std;
+
+void bubble_sort(string s)
+{
+    int sz = s.size();
+    for(int i=0;i<sz;i++)
+    {
+        for(int j=0;j<sz-i-1;j++)
+        {
+            if(s[j]>s[j+1])
+            {
+                //Swap
+                char tmp = s[j];
+                s[j] = s[j+1];
+                s[j+1] = tmp;
+            }
+        }
+    }
+}
+
+void get_ans(string s)
+{
+    int sz = s.size();
+    for(int i=0;i<sz;i++)
+    {
+        bool check = true;int cnt =0;
+        for(int j=0;j<i;j++)
+        {
+            if(s[j]==s[i])check = false;
+        }
+        if(check)
+        {
+             cout << s[i] << ": ";
+            for(int j=0;j<sz;j++)
+            {
+                if(s[j]==s[i])cnt++;
+            }
+            cout << cnt << endl;
+        }
+    }
+}
+
+int main()
+{
+    string s;
+    cin >> s;
+    int sz = (int)s.size();
+    bubble_sort(s);
+    get_ans(s);
+}
+
+
+
+//Cách 2: Mảng đánh dấu O(n)
+#include "iostream"
+#include "string"
+#include "climits"
+using namespace std;
+
+int mark[10000001];
+
+void get_ans(string s)
+{
+    int sz = (int)s.size();
+    int max_val = INT_MIN;
+    for(int i =0; i <sz;i++)
+    {
+        mark[(int)(s[i] - '0')]++;
+        if(s[i] - '0' > max_val)max_val = s[i] -'0';
+    }
+    for(int i=0;i<=max_val;i++)
+    {
+        if(mark[i]) cout << i << ": " << mark[i] << endl;
+    }
+
+}
+
+int main()
+{
+    string s;
+    cin >> s;
+    get_ans(s);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Bài 5: Cho 2 số nguyên N>0 và K>0 và Mảng N(<100) số nguyên . Đếm trong mảng có bao nhiêu số nguyên có K chữ số.
+ // Viết hàm int kDigitsNumbers(int *a,int n,int k) trả về số đếm được này
+
+
+ int cnt_chuso(int n)
+{
+    int cnt =0;
+    while(n!=0)
+    {
+        cnt ++;
+        n/=10;
+    }
+    return cnt;
+}
+
+int kDigitsNumbers(int *a,int n,int k)
+{
+    int cnt =0;
+    for(int i=0;i<n;i++)
+    {
+        int tmp = cnt_chuso(a[i]);
+        if(tmp==k)cnt++;
+    }
+    return cnt;
+}
+
+// Full chương trình:
+#include "iostream"
+using namespace std;
+
+int cnt_chuso(int n)
+{
+    int cnt =0;
+    while(n!=0)
+    {
+        cnt ++;
+        n/=10;
+    }
+    return cnt;
+}
+
+int kDigitsNumbers(int *a,int n,int k)
+{
+    int cnt =0;
+    for(int i=0;i<n;i++)
+    {
+        int tmp = cnt_chuso(a[i]);
+        if(tmp==k)cnt++;
+    }
+    return cnt;
+}
+
+int main()
+{
+    int n,k;
+    cin >> n >> k;
+    int *ptr = new int[n];
+    for(int i=0;i<n;i++)cin >> ptr[i];
+    int ans = kDigitsNumbers(ptr,n,k);
+    cout << ans << endl;
+    delete [] ptr;
+    ptr = NULL;
+}
+
+//Test-case:
+9 3
+1 111 123 688 512 26 489 68 3216
+//Output: 5 (111,123,688,512,489)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Bài 6:  Xây dựng cấu trúc Struct phân số gồm 2 thành phần dữ liệu kiểu số nguyên tử số(num), mẫu số(den) và xây dựng các hàm:
+// - Tính tổng 2 đại lượng phân số: Phanso tong(Phanso ps1, Phanso ps2);
+// - So sánh lớn hơn 2 phân số(trả về đúng nếu ps1 > ps2): int ssLonHon(Phanso ps1, Phanso ps2);
+
+// struct và các hàm:
+int ucln(int a,int b)
+{
+    while(b!=0)
+    {
+        int tmp = a%b;
+        a=b;
+        b= tmp;
+    }
+    return a;
+}
+
+int bcnn(int a,int b)
+{
+    return a*b/ucln(a,b);
+}
+
+struct PhanSo
+{
+  int num;
+  int den;
+
+  PhanSo(int _num, int _den)
+  {
+      num = _num;
+      den = _den;
+  }
+  void toigian()
+  {
+      int gcd = ucln(num,den);
+      num /= gcd;
+      den /= gcd;
+  }
+  void printPhanSo()
+  {
+      cout << num << ' ' << den << ' ';
+  }
+};
+
+PhanSo tong (PhanSo ps1, PhanSo ps2)
+{
+    int lcm = bcnn(ps1.den,ps2.den);
+    ps1.num = ps1.num * (lcm/ps1.den);
+    ps2.num = ps2.num * (lcm/ps2.den);
+    int res_num = ps1.num + ps2.num;
+    PhanSo ans(res_num,lcm);
+    return ans;
+}
+
+int ssLonHon(PhanSo ps1, PhanSo ps2)
+{
+    double ans= ps1.num*1.0/ps1.den - ps2.num*1.0/ps2.den;
+    if(ans>0)return 1;
+    else return 0;
+}
+
+
+//Full chương trình:
+#include "iostream"
+
+using namespace std;
+
+int ucln(int a,int b)
+{
+    while(b!=0)
+    {
+        int tmp = a%b;
+        a=b;
+        b= tmp;
+    }
+    return a;
+}
+
+int bcnn(int a,int b)
+{
+    return a*b/ucln(a,b);
+}
+
+struct PhanSo
+{
+  int num;
+  int den;
+
+  PhanSo(int _num, int _den)
+  {
+      num = _num;
+      den = _den;
+  }
+  void toigian()
+  {
+      int gcd = ucln(num,den);
+      num /= gcd;
+      den /= gcd;
+  }
+  void printPhanSo()
+  {
+      cout << num << ' ' << den << ' ';
+  }
+};
+
+PhanSo tong (PhanSo ps1, PhanSo ps2)
+{
+    int lcm = bcnn(ps1.den,ps2.den);
+    ps1.num = ps1.num * (lcm/ps1.den);
+    ps2.num = ps2.num * (lcm/ps2.den);
+    int res_num = ps1.num + ps2.num;
+    PhanSo ans(res_num,lcm);
+    return ans;
+}
+
+int ssLonHon(PhanSo ps1, PhanSo ps2)
+{
+    double ans= ps1.num*1.0/ps1.den - ps2.num*1.0/ps2.den;
+    if(ans>0)return 1;
+    else return 0;
+}
+
+int main()
+{
+    int x,y,z,t;
+    cin >> x>>y>>z>>t;
+    PhanSo ps1(x,y);
+    PhanSo ps2(z,t);
+    PhanSo res_tong = tong(ps1,ps2);
+    int res_compare = ssLonHon(ps1,ps2);
+    res_tong.printPhanSo();
+    if(res_compare)cout << "true" << endl;
+    else cout << "false" << endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Bài 7: Cho dãy n số nguyên ( 1<=n<= 1000), bạn hãy tìm xem trong dãy có phần tử nào cân bằng được dãy số này không? Phần tử nào thỏa mãn
+// tổng bên trái nó bằng tổng bên phải nó thì được gọi là phần tử cân bằng. Nếu bên trái hoặc bên phải nó không có phần tử thì tổng coi =0.
+// Viết hàm bool isBalance(int *a, int n) , nếu có phần tử cân bằng trả về true, k thì false
+
+//Ham:
+//O(n^2)
+
+bool isBalance(int *a, int n)
+{
+    for(int i=0;i<n;i++)
+    {
+        int sum_left =0,sum_right=0;
+        for(int j=0;j<i;j++) sum_left += a[j];
+        for(int j=i+1;j<n;j++) sum_right += a[j];
+        if(sum_left == sum_right)return true;
+    }
+    return false;
+}
+
+//Full chuong trinh:
+#include "iostream"
+using namespace std;
+
+//O(n^2)
+
+bool isBalance(int *a, int n)
+{
+    for(int i=0;i<n;i++)
+    {
+        int sum_left =0,sum_right=0;
+        for(int j=0;j<i;j++) sum_left += a[j];
+        for(int j=i+1;j<n;j++) sum_right += a[j];
+        if(sum_left == sum_right)return true;
+    }
+    return false;
+}
+
+int main()
+{
+    int n;
+    cin >>n;
+    int *arr = new int[n];
+    for(int i=0;i<n;i++)cin >> arr[i];
+    cout << boolalpha << isBalance(arr,n) << endl;
+    delete [] arr;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Bài 8: Câu mảng 2 chiều cuối:
+
+
+    // Hàm Câu a:
+
+    //Y tuong: Vòng lặp theo từng hàng từ 0 đến n-2, mỗi hàng vòng lặp cột cũng từ 0 đến n-2 để tìm theo yêu cầu đề bài
+void findSubMatrix(int **a, int n)
+{
+    for(int i=0;i<n-1;i++)
+    {
+        for(int j=0;j<n-1;j++)
+        {
+            if((a[i][j]==1 && a[i][j+1]==1 && a[i+1][j]==1 && a[i+1][j+1] ==1) || (a[i][j]==0 && a[i][j+1]==0 && a[i+1][j]==0 && a[i+1][j+1] ==0))
+            {
+                cout << '(' << i << "," << j << ')' << endl;
+            }
+        }
+    }
+}
+
+    //Full chương trình câu a:
+#include "iostream"
+using namespace std;
+
+void findSubMatrix(int **a, int n)
+{
+    for(int i=0;i<n-1;i++)
+    {
+        for(int j=0;j<n-1;j++)
+        {
+            if((a[i][j]==1 && a[i][j+1]==1 && a[i+1][j]==1 && a[i+1][j+1] ==1) || (a[i][j]==0 && a[i][j+1]==0 && a[i+1][j]==0 && a[i+1][j+1] ==0))
+            {
+                cout << '(' << i << "," << j << ')' << endl;
+            }
+        }
+    }
+}
+
+int main()
+{
+    int n;
+    cin >>n;
+    int **a = new int*[n];
+    for(int i=0;i<n;i++)
+    {
+        a[i] = new int[n];
+        for(int j=0;j<n;j++)
+        {
+            cin >> a[i][j];
+        }
+    }
+    findSubMatrix(a,n);
+    for (int i = 0; i < n; i++)
+    {
+        delete [] a[i];
+    }
+    delete [] a;
+    a = NULL;
+}
+
+/*Test case câu a:
+6
+0 1 0 1 0 1
+0 1 1 0 1 1
+0 1 1 1 1 1
+1 1 0 1 0 1
+1 1 1 0 1 1
+1 1 0 1 1 1
+--> Output:
+(1,1)
+(1,4)
+(3,0)
+(4,0)
+(4,4)
+*/
+
+
+
+
+
+
+
+    //Câu b: Sắp xếp các cặp tìm được ở câu a theo thứ tự tăng dần của tổng cặp chỉ số
+
+    //Ý tưởng: tạo 1 mảng phụ r nhét tổng của các cặp vào r sort, sau đó 2 vòng for với mỗi giá trị của tổng so với giá trị tổng của các cặp nếu = nhau
+    //thì in và break cái tổng đó
+
+    // (Nếu được dùng vector, map thì sẽ nhanh hơn)
+
+    // Hàm câu b:
+    void bubble_sort(int a[],int n)
+{
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n-i-1;j++)
+        {
+            if(a[j]>a[j+1])swap(a[j],a[j+1]);
+        }
+    }
+}
+
+struct Pair
+{
+    int x,y;
+    Pair() : x(0), y(0) {}
+    Pair(int _x, int _y)
+    {
+        x = _x;
+        y = _y;
+    }
+    void printPair()
+    {
+        cout << '(' << x << "," << y << ')' << endl;
+    }
+};
+
+
+void sortBySum(int **a, int n)
+{
+    int cnt =0;
+    int tong =0;
+    for(int i=0;i<n-1;i++)
+    {
+        for(int j=0;j<n-1;j++)
+        {
+            if((a[i][j]==1 && a[i][j+1]==1 && a[i+1][j]==1 && a[i+1][j+1] ==1) || (a[i][j]==0 && a[i][j+1]==0 && a[i+1][j]==0 && a[i+1][j+1] ==0))
+            {
+                cnt++;
+            }
+        }
+    }
+    int k=0;int l=0;int sum[cnt]; Pair res[cnt];
+    for(int i=0;i<n-1;i++)
+    {
+        for(int j=0;j<n-1;j++)
+        {
+            if((a[i][j]==1 && a[i][j+1]==1 && a[i+1][j]==1 && a[i+1][j+1] ==1) || (a[i][j]==0 && a[i][j+1]==0 && a[i+1][j]==0 && a[i+1][j+1] ==0))
+            {
+                tong = i+j;
+                sum[k] = tong;
+                res[k] = Pair(i,j);
+                k++;
+            }
+        }
+    }
+    bubble_sort(sum,cnt);
+    for(int i=0;i<cnt;i++)
+    {
+        for(int j=0;j<cnt;j++)
+        {
+            if(sum[i] == (res[j].x + res[j].y) )
+            {
+                res[j].printPair();
+                break;
+            }
+        }
+    }
+}
+
+
+
+
+
+    // Full chương trình câu b:
+#include "iostream"
+using namespace std;
+
+void bubble_sort(int a[],int n)
+{
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n-i-1;j++)
+        {
+            if(a[j]>a[j+1])swap(a[j],a[j+1]);
+        }
+    }
+}
+
+struct Pair
+{
+    int x,y;
+    Pair() : x(0), y(0) {}
+    Pair(int _x, int _y)
+    {
+        x = _x;
+        y = _y;
+    }
+    void printPair()
+    {
+        cout << '(' << x << "," << y << ')' << endl;
+    }
+};
+
+
+void sortBySum(int **a, int n)
+{
+    int cnt =0;
+    int tong =0;
+    for(int i=0;i<n-1;i++)
+    {
+        for(int j=0;j<n-1;j++)
+        {
+            if((a[i][j]==1 && a[i][j+1]==1 && a[i+1][j]==1 && a[i+1][j+1] ==1) || (a[i][j]==0 && a[i][j+1]==0 && a[i+1][j]==0 && a[i+1][j+1] ==0))
+            {
+                cnt++;
+            }
+        }
+    }
+    int k=0;int l=0;int sum[cnt]; Pair res[cnt];
+    for(int i=0;i<n-1;i++)
+    {
+        for(int j=0;j<n-1;j++)
+        {
+            if((a[i][j]==1 && a[i][j+1]==1 && a[i+1][j]==1 && a[i+1][j+1] ==1) || (a[i][j]==0 && a[i][j+1]==0 && a[i+1][j]==0 && a[i+1][j+1] ==0))
+            {
+                tong = i+j;
+                sum[k] = tong;
+                res[k] = Pair(i,j);
+                k++;
+            }
+        }
+    }
+    bubble_sort(sum,cnt);
+    for(int i=0;i<cnt;i++)
+    {
+        for(int j=0;j<cnt;j++)
+        {
+            if(sum[i] == (res[j].x + res[j].y) )
+            {
+                res[j].printPair();
+                break;
+            }
+        }
+    }
+}
+
+int main()
+{
+    int n;
+    cin >>n;
+    int **a = new int*[n];
+    for(int i=0;i<n;i++)
+    {
+        a[i] = new int[n];
+        for(int j=0;j<n;j++)
+        {
+            cin >> a[i][j];
+        }
+    }
+    sortBySum(a,n);
+    for (int i = 0; i < n; i++)
+    {
+        delete [] a[i];
+    }
+    delete [] a;
+    a = NULL;
+}
+
+
+/*Test_case câu b:
+6
+0 1 0 1 0 1
+0 1 1 0 1 1
+0 1 1 1 1 1
+1 1 0 1 0 1
+1 1 1 0 1 1
+1 1 0 1 1 1
+--> Output:
+(1,1)
+(3,0)
+(4,0)
+(1,4)
+(4,4)
+Giai thich: in theo tong sort theo thu tu 2,3,4,5,8
+
+
